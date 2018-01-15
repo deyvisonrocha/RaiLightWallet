@@ -71,7 +71,7 @@ function registerAddresses() {
 // On RaiLightServer connection
 socket.on('connect', function() {
 	console.log("Connected to the default server!");
-	
+
 	// Sure it will run after the wallet is loaded
 	walletLoaded(function (){
 		registerAddresses();
@@ -111,7 +111,7 @@ socket.on('connect', function() {
 					} catch(e) {console.log(err);}
 				});
 			});
-			
+
 		}
     });
 });
@@ -137,31 +137,37 @@ function PageLoad(page) {
 	$("#homebtn").removeClass('active hidden');
 	$("#receivebtn").removeClass('active hidden');
 	$("#sendbtn").removeClass('active hidden');
+	$("#settings").removeClass('active hidden');
 	$("#content").empty();
 	switch (page) {
 		case "receive":
 			currentPage = "receive";
 			$("#receivebtn").addClass('active');
 			$("#content").load("pages/receive.pg");
-			break; 
+			break;
 		case "send":
 			currentPage = "send";
 			$("#sendbtn").addClass('active');
 			$("#content").load("pages/send.pg");
-			break; 
+			break;
 		case "home":
 			currentPage = "home";
 			$("#homebtn").addClass('active');
 			$("#content").load("pages/home.pg");
-			break; 
+			break;
 		case "login":
 			currentPage = "login";
 			$("#homebtn").addClass('hidden');
 			$("#receivebtn").addClass('hidden');
 			$("#sendbtn").addClass('hidden');
 			$("#content").load("pages/login.pg");
-			break; 
-		default: 
+			break;
+		case "settings":
+			currentPage = "settings";
+			$("#settingsbtn").addClass('active');
+			$("#content").load("pages/settings.pg");
+			break;
+		default:
 			currentPage = "create";
 			$("#homebtn").addClass('hidden');
 			$("#receivebtn").addClass('hidden');
@@ -190,6 +196,14 @@ $("#sendbtn").click(function() {
 	if (walletloaded) {
 		if (currentPage != "send") {
 			PageLoad("send");
+		}
+	}
+});
+
+$("#settingsbtn").click(function() {
+	if (walletloaded) {
+		if (currentPage != "settings") {
+			PageLoad("settings");
 		}
 	}
 });
@@ -250,11 +264,11 @@ function checkChains(cb) {
     socket.on('message', function(r) {
 		if (r.type == "Chain") {
 			var blocks = r.blocks;
-			
+
 			if(blocks) {
 				index = Object.keys(blocks);
 				index.reverse();
-				
+
 				index.forEach(function(val, key){
 					try{
 						var blk = new Block();
@@ -270,7 +284,7 @@ function checkChains(cb) {
 				});
 				wallet.useAccount(myaddress);
 				cb();
-				
+
 			} else {
 				cb();
 			}
@@ -324,7 +338,7 @@ function getPrice() {
 		let body = "";
 		res.on("data", data => {
 			body += data;
-		});  
+		});
 		res.on("end", () => {
 			body = JSON.parse(body);
 			price = body[0].price_usd;

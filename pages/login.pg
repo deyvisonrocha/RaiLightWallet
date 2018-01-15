@@ -2,6 +2,7 @@
 <p style="color:  white;margin-top: -5px;text-align:  center;font-size: 25px;">welcome back!</p>
 <br>
 <div id="n">
+	<div id="errorLogin" class="hidden"></div>
 	<span>Enter your password to access your wallet:</span>
 	<br>
 	<input type="password" id="mypassword"></input>
@@ -34,13 +35,23 @@ button:focus {
 #mypassword {
     margin-top: 15px;
 }
+#errorLogin {
+	color: red;
+	padding: 4px;
+}
+.hidden {
+	display: none;
+}
+.show {
+	display: block;
+}
 </style>
 
 <script>
 db.getWallet(function (exists, pack) {
 	$("#button").click(function() {
 		var password = $("#mypassword").val();
-		
+
 		wallet = new RaiWallet(password);
 		try{
 			wallet.load(pack);
@@ -51,9 +62,12 @@ db.getWallet(function (exists, pack) {
 			walletloaded = true;
 			PageLoad("home");
 		}catch(e){
-			alert(e);
+			//alert(e);
+			var divError = $('#errorLogin');
+			divError.toggleClass('hidden')
+			divError.text(e);
 		}
-		
+
 	});
 });
 </script>
